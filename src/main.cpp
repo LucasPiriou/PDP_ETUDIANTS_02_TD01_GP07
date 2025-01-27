@@ -29,6 +29,16 @@ DHT_Unified dht(CAPTEUR, DHTTYPE);
 char ssid[] = "S21 Ultra de Matthieu";
 char pass[] = "Aboish22";
 
+BLYNK_WRITE(V2)
+{
+  int pinValue = param.asInt(); // assigning incoming value from pin V0 to a variable
+  Serial.print("Received value from Blynk: ");
+  Serial.println(pinValue);
+  digitalWrite(LED,pinValue);
+  // Delay is only there so that we get a chance to see the LED value properly.
+  delay(1000);
+}
+
 void setup() {
   // Setup pins
   pinMode(LED, OUTPUT);
@@ -41,6 +51,7 @@ void setup() {
   // begin the Blynk session
   Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass);
   Blynk.run();
+  Blynk.syncVirtual(V2);
 
   // Start listening to the DHT11
   dht.begin();
